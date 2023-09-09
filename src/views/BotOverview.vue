@@ -30,18 +30,27 @@
       </div>
     </div>
   </o-collapse>
-
-  <div class="flex justify-center">
-    <router-link :to="{ name: 'Modeler' }" v-if="!searchTerm">
-      <BotOverviewCard></BotOverviewCard>
-    </router-link>
-    <BotOverviewCard
-      v-for="botModel in filteredOperations"
-      :botModel="botModel"
-    >
-    </BotOverviewCard>
+  <div class="flex flex-col">
+    <div class="flex justify-center">
+      <router-link :to="{ name: 'Modeler' }" v-if="!searchTerm">
+        <BotOverviewCard></BotOverviewCard>
+      </router-link>
+      <BotOverviewCard
+        v-for="botModel in filteredOperations"
+        :botModel="botModel"
+        @bot-added="addToSelectedBots"
+      >
+      </BotOverviewCard>
+    </div>
+    <b class="flex justify-center">These are the selected bots to generate a UI log from: </b>
+    <div class="flex justify-center" v-for="selectedBot in selectedBotsForUiLog" :key="selectedBot._id">
+        {{ selectedBot.name }}
+    </div>
+    <div class="flex justify-center mt-4">
+      <button @click="triggerUiLogGeneration" class="bg-action text-white font-bold py-2 px-4 rounded w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 max-w-screen-md">Generate UI log</button>
+    </div>
     <div v-if="searchTerm && filteredOperations.length === 0" class="m-4">
-      No Bots found.
+        No Bots found.
     </div>
   </div>
 </template>
@@ -53,6 +62,7 @@ export default defineComponent({
     return {
       botModels: [] as BotModel[],
       searchTerm: "",
+      selectedBotsForUiLog: [] as any[],
     };
   },
   async mounted(): Promise<void> {
@@ -61,6 +71,17 @@ export default defineComponent({
   methods: {
     clearSearchTerm() {
       this.searchTerm = "";
+    },
+    addToSelectedBots (bot: any) {
+      console.log("added bot: ", bot._id)
+      this.selectedBotsForUiLog.push(bot);
+    },
+    async triggerUiLogGeneration() {
+      let uiLogBotModels: any[] = this.botModels.filter((botModel) => this.selectedBotsForUiLog.some((bot) => bot._id === botModel._id));
+      // api call to backend with passing all ids
+      let specificBotModels: any[] = await botModelApi.getSpecificBotModels(uiLogBotModels);
+      console.log(specificBotModels)
+
     },
   },
   computed: {

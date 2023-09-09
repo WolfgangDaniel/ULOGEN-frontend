@@ -20,6 +20,24 @@ export default {
 
     return parseBotModel(res.data as BotModel);
   },
+  async getSpecificBotModels(botModelIds: string[]): Promise<BotModel[]> {
+    try {
+      const res = await axios.get<BotModel[]>(
+        `http://localhost:3001/api/BotModels/specificBotModels`,
+        {
+          params: {
+            BotModelIds: botModelIds.join(','), // Convert the array to a comma-separated string
+          },
+        }
+      );
+  
+      return res.data;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  },
+
   async getLinkedBotModel(
     botModelId: string,
     targetRpaTool: string

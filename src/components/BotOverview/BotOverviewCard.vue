@@ -17,6 +17,7 @@
         >
       </div>
       <div v-if="cardHovered || hoverLock" class="absolute bottom-0 w-full">
+        <button @click="addToSelectedBots">+</button>
         <o-tooltip
           variant="primary"
           position="bottom"
@@ -24,6 +25,7 @@
           :auto-close="['outside', 'escape']"
           @open="hoverLock = true"
           @close="hoverLock = false"
+          style="margin-left: 10px;"
         >
           <template v-slot:content>
             <div class="flex flex-col gap-2 my-1">
@@ -83,6 +85,10 @@ export default defineComponent({
           variant: "danger",
         });
       }
+    },
+    addToSelectedBots() {
+      console.log(this.botModel._id)
+      this.$emit('bot-added', this.botModel);
     },
   },
 });
