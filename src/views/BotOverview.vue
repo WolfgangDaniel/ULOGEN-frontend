@@ -79,7 +79,7 @@ export default defineComponent({
     async triggerUiLogGeneration() {
       let uiLogBotModels: any[] = this.botModels.filter((botModel) => this.selectedBotsForUiLog.some((bot) => bot._id === botModel._id));
       // api call to backend with passing all ids
-      let specificBotModels: any[] = await botModelApi.getSpecificBotModels(uiLogBotModels);
+      let specificBotModels: any[] = await botModelApi.generateUiLogs(uiLogBotModels);
       console.log(specificBotModels)
 
     },

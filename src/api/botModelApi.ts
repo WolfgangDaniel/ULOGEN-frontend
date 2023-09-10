@@ -20,13 +20,13 @@ export default {
 
     return parseBotModel(res.data as BotModel);
   },
-  async getSpecificBotModels(botModelIds: string[]): Promise<BotModel[]> {
+  async generateUiLogs(botModelsForUiLog: any[]): Promise<BotModel[]> {
     try {
       const res = await axios.get<BotModel[]>(
-        `http://localhost:3001/api/BotModels/specificBotModels`,
+        `http://localhost:3001/api/BotModels/generateUiLogs`,
         {
           params: {
-            BotModelIds: botModelIds.join(','), // Convert the array to a comma-separated string
+            BotModelsForUiLog: botModelsForUiLog
           },
         }
       );
